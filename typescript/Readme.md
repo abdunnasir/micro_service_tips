@@ -255,13 +255,282 @@ So  it's an example of when we have to use type annotation over Type Inference.
 *******************************************************************
 
 
+Another example when we will use  type annotation
+
+
+ When we declare a variable on one line  and initalizate it later
+
+let words = ['red', 'green', 'blue'];
+let foundWord;
+
+for (let i = 0; i < words.length; i++) {
+  if (words[i] === 'green') {
+    foundWord = true;
+  }
+}
+
+
+In the above case, foundWord decalred but it's value is assigned later.
+
+
+So better code is
+
+let words = ['red', 'green', 'blue'];
+let foundWord: boolean;  // type annotation
+
+for (let i = 0; i < words.length; i++) {
+  if (words[i] === 'green') {
+    foundWord = true;
+  }
+}
+
+
+******************************************************
+
+Some times one variable might be used for diffrenet types of 
+values like boolean and number.
+
+So if we define 
+
+let numberAboveZero = false;
+
+we cannot assign some numbers to it later.
+
+so if we have some cases where we need to assign multiple types 
+of values to a variable (not recommended),
+
+we can use type annotation as shown below
+let numberAboveZero: boolean | number = false;
+
+Full example is given below
+
+
+let numbers = [-10, -1, 12];
+let numberAboveZero: boolean | number = false;
+
+for (let i = 0; i < numbers.length; i++) {
+  if (numbers[i] > 0) {
+    numberAboveZero = numbers[i];
+  }
+}
+
+So in this case numberAboveZero can store both boolean and number.
+
+********************************************
 
 
 
+For a function, we had used something like this
+
+cost lognumber: (i: number) => void = (i) => {
+    console.log(i)
+}
+
+
+We can do it in a diffrent way too
+
+const lognumber = (i: number) : void => {
+  console.log(i)
+};
 
 
 
+For a function adding two numbers
 
+const add = (a: number, b: number) : number => {
+  return a + b;
+};
+
+
+We can remove the return type, as 
+type script will automatcially identify the return type
+
+from return a + b;
+
+
+const add = (a: number, b: number)  => {
+  return a + b;
+};
+
+But one issue is,  in the below code type script will assume return type as 
+void, as there is no return .
+
+const add = (a: number, b: number)  => {
+  a + b;
+};
+
+
+***************************************************
+
+Same syntax works with both named function and anonymus function
+
+see the below examples
+
+function divide(a: number, b: number): number {
+  return a / b;
+}
+
+const multiply = function(a: number, b: number): number {
+  return a * b;
+};
+
+
+*************************************************
+
+We can use void, even when it will throw an exception in some cases
+and in most cases it won't return anything
+
+const throwError = (message: string): void => {
+  if (!message) {
+    throw new Error(message);
+  }
+};
+
+****************************************************
+ Destructuring with Annotations
+
+
+const todaysWeather = {
+  date: new Date(),
+  weather: 'sunny'
+};
+
+const logWeather = (forecast: {
+  date: Date;
+  weather: string;
+}): void => {
+  console.log(forecast.date);
+  console.log(forecast.weather);
+};
+
+logWeather(todaysWeather);
+
+In the above example
+
+We are using the function argumnet with annotaion as
+
+forecast: {
+  date: Date;
+  weather: string;
+}
+
+
+Where forecast is the argumnet name and 
+ {
+  date: Date;
+  weather: string;
+}
+
+is the type of the argumnet.
+
+then we have to print
+console.log(forecast.date);
+
+
+
+What if we want to use Destructuring along with annotaion, then the function 
+argumnet will be 
+
+ ({
+  date,
+  weather
+}: {
+  date: Date;
+  weather: string;
+})
+
+Then we can print 
+ console.log(date);
+
+
+full example is given below
+
+
+
+const todaysWeather = {
+  date: new Date(),
+  weather: 'sunny'
+};
+
+const logWeather = ({
+  date,
+  weather
+}: {
+  date: Date;
+  weather: string;
+}): void => {
+  console.log(date);
+  console.log(weather);
+};
+
+logWeather(todaysWeather);
+
+
+***********************
+
+Annotations Around Objects
+
+
+Let's first see how to define  a function within an object
+
+const profile = {
+  name: 'alex',
+  age: 20,
+  coords: {
+    lat: 0,
+    lng: 15
+  },
+  setAge(age: number): void {
+    this.age = age;
+  }
+};
+
+In the above sample code, setAge is a function defined within an
+object.
+
+
+from profile, get age and name along with type annotation for them.
+
+Code for that is
+const { age, name }: { age: number; name: string } = profile;
+
+
+The next sample code is bit complicated 
+const {
+  coords: { lat, lng }
+}: { coords: { lat: number; lng: number } } = profile;
+
+******************************
+
+benefits of uisng type annotation with arrays
+
+When we don't initialize an aray with it's values
+
+we can declare it with type as shown below
+const carsByMake: string[][] = [];
+
+now what's the benefits of uisng type annotation
+is listed below with three benefits.
+
+
+const carMakers = ['ford', 'toyota', 'chevy'];
+const dates = [new Date(), new Date()];
+
+const carsByMake: string[][] = [];
+
+//1) Help with inference when extracting values
+const car = carMakers[0];
+const myCar = carMakers.pop();
+
+//2) Prevent incompatible values
+carMakers.push(100);
+
+//3) Help with 'map'
+carMakers.map(
+  (car: string): string => {
+    return car.toUpperCase();
+  }
+);
 
 
 
